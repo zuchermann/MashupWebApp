@@ -1,7 +1,11 @@
-export default function($scope, Data) {
-let params = {
-	newHasInput: false,
-};
+import _ from 'lodash';
+
+export default function($scope, Data, projectsFactory) {
+	let params = {
+		newHasInput: false,
+	};
+
+	console.log(projectsFactory.newProject());
 
 	$scope.data = Data;
 

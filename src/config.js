@@ -1,9 +1,10 @@
 import angular from 'angular';
 import uiRouter from 'angular-ui-router';
+import projectsFactory from 'factories/projects-factory';
 import projectsController from "projects/projects";
 import editController from "edit/edit";
 
-const app = angular.module('app', [uiRouter]);
+const app = angular.module('app', [uiRouter, projectsFactory.name]);
 app.factory('Data', function() {
 	return {currentProj: {}};
 });
