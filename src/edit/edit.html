@@ -2,6 +2,25 @@
 
 	<a ui-sref="projects" class="nav-link">back to projects</a>
 	<h2><span class="projects_name">{{data.currentProj.name}}</span></h2>
+
+
+	<table class="table table-striped">
+		<tr>
+			<th>title</th>
+			<th>artist</th>
+			<th>actions</th>
+		</tr>
+
+		<tr ng-repeat="song in songs">
+			<td><span class="song_title">{{song.title}}</span></td>
+			<td><span class="song_artist">{{song.artist}}</span></td>
+			<td>
+				<button ng-click="setMelody(song)" ng-class="isMelody(song) ? 'btn-warning' : 'btn-danger'">set melody</button>
+				<button ng-click="setChords(song)" ng-class="isChords(song) ? 'btn-warning' : 'btn-danger'">set chords</button>
+			</td>
+		</tr>
+	</table>
+
 	<button ng-click="play()" class="btn btn-info" >play</button>
 	<button ng-click="pause()" class="btn btn-info" >pause</button>
 </div>

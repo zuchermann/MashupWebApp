@@ -4,12 +4,16 @@ var express = require('express');
 var router = express.Router();
 
 router.get('/', function(req, res) {
-	res.send('HELLO FROM PROJECTS');
+	 Project.find(function(err, results) {
+         if (err) { console.log(err); }
+
+         res.send({ project: results });
+     });
 });
 
 router.post('/', function(req, res) {
 	var project = new Project(req.body);
-	Project.save(function(err) {
+	project.save(function(err) {
 		if (err) {console.log(err);}
 
 		res.send("project saved");
@@ -17,9 +21,9 @@ router.post('/', function(req, res) {
 });
 
 router.put('/:id', function(req, res) {
-	var id = req.params.id;
+	var l = req.params.id;
 	Project.update({ _id: mongoose.Types.ObjectId(id) }, {
-		$set: { task: req.body.task } 
+		$set: { name: req.body.name } 
 	}, function(err) {
 		if (err) {console.log(err);}
 
