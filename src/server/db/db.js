@@ -1,10 +1,10 @@
 var mongoose = require('mongoose');
-//mongoose.connect('mongodb://localhost/projects');
+mongoose.connect('mongodb://localhost/projects');
 
-var Project = mongoose.model('Project', {
-	name: String,
+var project = mongoose.model('Project', {
+    name: String,
 	length: String,
-	modified: String
+	modified: {type: Date, default: Date.now}
 });
 
-module.exports.Project = Project;
+module.exports.Project = project;

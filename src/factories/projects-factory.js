@@ -4,23 +4,45 @@ import angular from 'angular';
 const projectsFactory = angular.module('app.projectsFactory', [])
 
 .factory('projectsFactory', ($http) => {
+	
+	function getProjects($scope) {
+        $http.get('/projects').success(response => {
+            $scope.projects = response.project;
+        });
+    }
+
 	function newProject($scope, params) {
-		params.newHasInput = false;
-		$scope.newProjectInput = '';
+		if (!$scope.newProjectInput) { return; }
+
+        $http.post('/projects', {
+            name: $scope.newProjectInput,
+            length: '0:00',
+            modified: new Date()
+        }).success(response => {
+            getProjects($scope);
+            $scope.newProjectInput = '';
+        });
 	}
 
-	function deleteProject($scope, params, name) {
-		var i = 0;
-		var len = $scope.projects.length;
-		for (; i < len; ) {
-			if($scope.projects[i].name === name){
-				$scope.projects.splice(i, 1);
-				break;
-			}
-			i++;
-		}
-		params.newHasInput = false;
-		$scope.newProjectInput = '';
+	function deleteProject($scope, params, toDelete) {
+
+		$http.delete(`/projects/${toDelete._id}`).success(response => {
+            getProjects($scope);
+            params.newHasInput = false;
+            $scope.newProjectInput = '';
+        });
+
+		// var i;
+		// var len = $scope.projects.length;
+		// for (i = 0; i < len; i++) {
+		// 	if($scope.projects[i].name === name){
+		// 		$scope.projects.splice(i, 1);
+		// 		break;
+		// 	}
+		// 	i++;
+		// }
+		// params.newHasInput = false;
+		// $scope.newProjectInput = '';
 	}
 
 	function watchNewProjectInput($scope, params, val) {
@@ -56,6 +78,7 @@ const projectsFactory = angular.module('app.projectsFactory', [])
 
 
 	return {
+		getProjects,
 		newProject,
 		deleteProject,
 		watchNewProjectInput

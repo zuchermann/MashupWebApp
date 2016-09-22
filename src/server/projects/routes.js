@@ -31,4 +31,13 @@ router.put('/:id', function(req, res) {
 	});
 });
 
+router.delete('/:id', function(req, res) {
+    var id = req.params.id;
+    Project.remove({ _id: mongoose.Types.ObjectId(id) }, function(err) {
+        if (err) { console.log(err); }
+
+        res.send('project deleted');
+    });
+});
+
 module.exports = router;

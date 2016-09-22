@@ -7,22 +7,22 @@ export default function($scope, Data, projectsFactory) {
 
 	$scope.data = Data;
 
-	$scope.projects = [
-	{
-		name: 'project 1',
-		length: '0:00',
-		melody: '',
-		chords: ''
-	},
-	{
-		name: 'project 2',
-		length: '0:00',
-		melody: '',
-		chords: ''
-	}
-	];
+	// $scope.projects = [
+	// {
+	// 	name: 'project 1',
+	// 	length: '0:00',
+	// 	melody: '',
+	// 	chords: ''
+	// },
+	// {
+	// 	name: 'project 2',
+	// 	length: '0:00',
+	// 	melody: '',
+	// 	chords: ''
+	// }
+	// ];
 
-	
+	projectsFactory.getProjects($scope);
 
 	$scope.setCurrentProj = (proj) => {
 		$scope.data.currentProj = proj;
