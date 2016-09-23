@@ -1,11 +1,16 @@
 import _ from 'lodash';
 
-export default function($scope, Data, projectsFactory) {
+export default function($scope, $location, Data, projectsFactory) {
+
 	let params = {
 		newHasInput: false,
 	};
 
 	$scope.data = Data;
+
+	if(!$scope.data.isAuthenticated) {
+		 $location.path('authenticate');
+	}
 
 	// $scope.projects = [
 	// {
