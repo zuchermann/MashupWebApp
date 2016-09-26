@@ -1,4 +1,7 @@
-export default function($scope, Data) {
+var MIDIParser = require('midi-parser-js/src/midi-parser').default
+
+
+export default function($scope, Data, $document) {
 	$scope.data = Data;
 
 	let params = {
@@ -44,7 +47,14 @@ export default function($scope, Data) {
 		return $scope.data.currentProj.chords === song.title;
 	};
 
+	MIDIParser.addListener(document.getElementById('filereader'), function(obj){
+		// Your callback function
+		console.log(obj);
+	});
+
 	$scope.$on("$destroy", function(){
         $scope.pause();
     });
+
+
 }

@@ -32,6 +32,10 @@ module.exports = {
 			loader: 'raw'
 		},
 		{
+			test: /\.(mid|midi)/,
+			loader: 'raw'
+		},
+		{
 			test: /\.scss$/,
 			loaders: [
 				'style',
