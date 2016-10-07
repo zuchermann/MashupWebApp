@@ -1,4 +1,5 @@
 <div class="container">
+<div id="webmidilink"></div>
 
 	<a ui-sref="projects" class="nav-link">back to projects</a>
 	<h2><span class="projects_name">{{data.currentProj.name}}</span></h2>
@@ -21,6 +22,7 @@
 		</tr>
 	</table>
 	<input type="file" id="filereader"/>
+	<button ng-click="playCogs()">TEST</button>
 
 	<button ng-click="play()" class="btn btn-info" >play</button>
 	<button ng-click="pause()" class="btn btn-info" >pause</button>

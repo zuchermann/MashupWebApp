@@ -10,7 +10,7 @@ export default function($scope, $location, Data, projectsFactory) {
 	}
 }
 
-FB.getLoginStatus(function(response) {
+/*FB.getLoginStatus(function(response) {
   console.log("hey");
   if (response.status === 'connected') {
     // the user is logged in and has authenticated your
@@ -26,4 +26,5 @@ FB.getLoginStatus(function(response) {
   } else {
     // the user isn't logged in to Facebook.
   }
- });
+ });*/
+

@@ -1,20 +1,14 @@
 var mongoose = require('mongoose');
 var express = require('express');
 var router = express.Router();
-var fs = require('fs');
 
 router.get('/:id', function(req, res) {
 	var id = req.params.id;
-	location = __dirname + "/" + id;
+	 Project.find(function(err, results) {
+         if (err) { console.log(err); }
 
-	fs.readFile(location, "binary", function (err,data) {
-		if (err) {
-			return console.log(err);
-		}
-		res.send({
-			midi: data
-		});
-	});
+         res.send({ project: results });
+     });
 });
 
 module.exports = router;
