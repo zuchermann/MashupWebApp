@@ -1,0 +1,1 @@
+{"song1":"/Users/yn/projects/mashup-app/src/server/songs/files/Gymnopedie - Erik Satie.mid","song2":"/Users/yn/projects/mashup-app/src/server/songs/files/Runaway - Del Shannon.mid","destination":"/Users/yn/projects/mashup-app/src/server/songs/zk.mashup.destination.mid"}

@@ -13,46 +13,55 @@ export default function($scope, Data, $document, $http) {
 		mashup: ""
 	};
 	
-	$scope.songs = [{
-		title: "Gymnopedie I",
-		artist: "Satie"
-	},
-	{
-		title: "Runaway",
-		artist: "Del Shannon"
-	}];
+	$http.get('/songs').success(response => {
+		$scope.songs = response.data;
+	});
+
+	//init midi player
+
 
 	$scope.play = () => {
-		params.mashup = $scope.data.currentProj.melody + "-" + 
-		$scope.data.currentProj.chords;
-		//params.url = require("file!./midi/" + params.mashup + ".mp3");
-		params.audio = new Audio(params.url);
-		params.audio.play();
+		var melody = $scope.data.currentProj.melody;
+		var chords = $scope.data.currentProj.chords;
+		var id= melody.file.length + '$' + melody.file + chords.file;
+		$http.get('/songs/mashup/' + id).success(response => {
+    		var midi_file = response.midi;
+    		//console.log("response: "+ midi_file);
+    		$scope.playSong(midi_file);
+    	});
 	};
 
 	$scope.pause = () => {
-		params.audio.pause();
+		smfPlayer.stopPlay();
 	};
 
 	$scope.setMelody = (song) => {
-		$scope.data.currentProj.melody = song.title;
+		$scope.data.currentProj.melody = song;
 	};
 
 	$scope.setChords = (song) => {
-		$scope.data.currentProj.chords = song.title;
+		$scope.data.currentProj.chords = song;
 	};
 
 	$scope.isMelody = (song) => {
-		return $scope.data.currentProj.melody === song.title;
+		return $scope.data.currentProj.melody === song;
 	};
 
 	$scope.isChords = (song) => {
-		return $scope.data.currentProj.chords === song.title;
+		return $scope.data.currentProj.chords === song;
 	};
 
-	$scope.playCogs = () => {
+	$scope.playSong = (song) => {
 		var midi_file;
-		var webMidiLinkSynth=[
+		midi_file = song;
+		var smfParser = new SmfParser();
+		var parsedSmf = smfParser.parse(midi_file);
+		smfPlayer.stopPlay();
+		smfPlayer.init( parsedSmf, 0, 0 );
+		smfPlayer.startPlay();
+	};
+
+	var webMidiLinkSynth=[
 		{
 			"id":"wml00", "version": 1, "manufacturer":"g200kg",
 			"name":"[Experimental] GMPlayer (Web MIDI Link)",
@@ -65,43 +74,35 @@ export default function($scope, Data, $document, $http) {
     		"name":"[Experimental] SoundFont: Yamaha XG (Web MIDI Link)",
     		"url":"//logue.github.io/smfplayer.js/wml.html",
     		"size":"width=600,height=600,scrollbars=yes,resizable=yes"
-    	}];
-    	var sdata=webMidiLinkSynth[0];
-    	synth.Load(sdata.url, sdata.id, sdata.size, "webmidilink");
-    	var midiout={
-            "id": null,
-            "manufacturer": sdata.manufacturer,
-            "name": sdata.name,
-            "type": "output",
-            "version": sdata.version,
-            "send": null
-        };
+    	}
+    ];
+	var sdata=webMidiLinkSynth[0];
+	synth.Load(sdata.url, sdata.id, sdata.size, "webmidilink");
+	var midiout={
+        "id": null,
+        "manufacturer": sdata.manufacturer,
+        "name": sdata.name,
+        "type": "output",
+        "version": sdata.version,
+        "send": null
+    };
 
-        var smfPlayer=new SmfPlayer(midiout);
+    var smfPlayer=new SmfPlayer(midiout);
 
-        midiout.send=function(msg, time) {
-            // time must be converted from absolite time to relative time.
-            // Web MIDI API handles absolute time, but Web MIDI Links needs relative time.
-            var aTime;
-            aTime=time-(window.performance.now()-smfPlayer.startTime)-smfPlayer.startTime+smfPlayer.latency;
-            if(typeof msg=="object") {
-                for(var i=0; i<msg.length; i++) {
-                    msg[i]=msg[i].toString(16).replace("0x", "");
-                }
+    midiout.send=function(msg, time) {
+        // time must be converted from absolite time to relative time.
+        // Web MIDI API handles absolute time, but Web MIDI Links needs relative time.
+        var aTime;
+        aTime=time-(window.performance.now()-smfPlayer.startTime)-smfPlayer.startTime+smfPlayer.latency;
+        if(typeof msg=="object") {
+            for(var i=0; i<msg.length; i++) {
+                msg[i]=msg[i].toString(16).replace("0x", "");
             }
-            var out="midi,"+msg.join(",");
-            synth.send(out, aTime);
-                
-        };
-
-    	$http.get('/songs/Cogs.mid').success(response => {
-    		midi_file = response.midi;
-    		var smfParser = new SmfParser();
-    		var parsedSmf = smfParser.parse(midi_file);
-    		smfPlayer.init( parsedSmf, 0, 0 );
-    		smfPlayer.startPlay();
-    	});
-	};
+        }
+        var out="midi,"+msg.join(",");
+        synth.send(out, aTime);
+            
+    };
 
 	MIDIParser.addListener(document.getElementById('filereader'), function(obj){
 			// Your callback function
@@ -109,8 +110,6 @@ export default function($scope, Data, $document, $http) {
 	});
 
 	$scope.$on("$destroy", function(){
-		$scope.pause();
+		smfPlayer.stopPlay();
 	});
-
-
 }
