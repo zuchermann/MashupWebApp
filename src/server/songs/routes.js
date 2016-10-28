@@ -50,7 +50,7 @@ router.get('/mashup/:id', function(req, res) {
 			});
 		});
 	});
-	console.log("stringify " + JSON.stringify(paths));
+	//console.log("stringify " + JSON.stringify(paths));
 	py.stdin.write(JSON.stringify(paths));
 	py.stdin.end();
 
